@@ -1,11 +1,13 @@
 [project]
 name            = "alphaxiv"
 version         = "0.0.0"
-description     = ""
+description     = "Typed Python CLI for alphaXiv's reviewed public REST API"
 readme          = "README.md"
 requires-python = ">=3.12"
 authors         = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
 dependencies    = [
+  "httpx>=0.28.1",
+  "pydantic>=2.13.4",
   "typer>=0.27.1",
 ]
 

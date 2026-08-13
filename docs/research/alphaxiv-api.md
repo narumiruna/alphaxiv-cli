@@ -417,6 +417,20 @@ Issue #225 發生在目前自助 API Key 與完整 MCP 文件推出之前。
 - 不要加入全站論文抓取或語料庫鏡像功能。
 - 不要在沒有書面授權時提供商業資料再發布能力。
 
+### 已採用的靜態 REST 白名單
+
+第一階段 CLI 靜態實作 26 個經審核的匿名 `GET` 端點。
+
+白名單涵蓋快速與全文搜尋、主題、組織、研究者、活動、論文動態、論文核心資料、既有全文與 overview，以及特定論文關聯資料。
+
+每個端點都有固定 method、path template、Pydantic 輸入輸出模型與離線測試。
+
+正式 CLI 不下載 OpenAPI、不動態產生 request，也不接受任意 HTTP method、URL、path 或驗證標頭。
+
+`api-dev.alphaxiv.org/api.json` 只由明確執行的開發期 drift checker 下載，檢查器只報告靜態契約差異。
+
+目前 REST client 完全匿名，API Key 與 MCP 功能留待後續獨立實作。
+
 ### 建議的第一階段功能
 
 | CLI 功能 | 建議介面 |

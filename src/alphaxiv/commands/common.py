@@ -1,0 +1,42 @@
+from collections.abc import Callable
+from contextvars import ContextVar
+
+import typer
+from pydantic import BaseModel
+
+from alphaxiv.errors import AlphaXivError
+from alphaxiv.errors import InputError
+from alphaxiv.errors import RemoteAPIError
+from alphaxiv.output import render_error
+from alphaxiv.output import render_json
+
+_DEBUG = ContextVar("alphaxiv_debug", default=False)
+
+
+def set_debug(enabled: bool) -> None:
+    _DEBUG.set(enabled)
+
+
+def run_operation[ModelT: BaseModel](operation: Callable[[], ModelT]) -> ModelT:
+    try:
+        return operation()
+    except AlphaXivError as error:
+        render_error(error)
+        raise typer.Exit(code=int(error.exit_code)) from None
+    except ValueError as error:
+        safe_error = InputError(str(error))
+        render_error(safe_error)
+        raise typer.Exit(code=int(safe_error.exit_code)) from None
+    except Exception as error:
+        if _DEBUG.get():
+            raise
+        safe_error = RemoteAPIError("unexpected alphaXiv CLI error")
+        render_error(safe_error)
+        raise typer.Exit(code=int(safe_error.exit_code)) from error
+
+
+def emit(model: BaseModel, *, json_output: bool, human: Callable[[], None]) -> None:
+    if json_output:
+        render_json(model)
+    else:
+        human()
