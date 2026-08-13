@@ -1,10 +1,10 @@
 import pytest
 from pydantic import ValidationError
 
-from alphaxiv.models.common import ErrorEnvelope
-from alphaxiv.models.common import RestSettings
-from alphaxiv.models.paper import PaperRecord
-from alphaxiv.models.search import PaperSearchResult
+from axiv.models.common import ErrorEnvelope
+from axiv.models.common import RestSettings
+from axiv.models.paper import PaperRecord
+from axiv.models.search import PaperSearchResult
 
 
 def test_external_models_accept_new_remote_fields_and_aliases() -> None:

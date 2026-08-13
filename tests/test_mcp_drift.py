@@ -1,7 +1,7 @@
-from alphaxiv.contracts.mcp import MCP_TOOLS
-from alphaxiv.contracts.mcp import check_mcp_tools
-from alphaxiv.models.mcp import McpToolDescription
-from alphaxiv.models.mcp import McpToolList
+from axiv.contracts.mcp import MCP_TOOLS
+from axiv.contracts.mcp import check_mcp_tools
+from axiv.models.mcp import McpToolDescription
+from axiv.models.mcp import McpToolList
 
 
 def compatible_tools() -> McpToolList:

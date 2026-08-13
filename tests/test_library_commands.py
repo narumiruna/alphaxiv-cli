@@ -4,21 +4,21 @@ from typing import Self
 import pytest
 from typer.testing import CliRunner
 
-import alphaxiv.commands.library as library_command
-from alphaxiv.cli import app
-from alphaxiv.models.library import LibraryFolder
-from alphaxiv.models.library import LibraryListResult
-from alphaxiv.models.library import LibraryMutationResult
-from alphaxiv.models.library import LibraryPaper
-from alphaxiv.models.library import PaperMembership
-from alphaxiv.models.mcp import CreateFolderArguments
-from alphaxiv.models.mcp import DeleteFolderArguments
-from alphaxiv.models.mcp import ListLibraryArguments
-from alphaxiv.models.mcp import McpInitializeResult
-from alphaxiv.models.mcp import MovePapersArguments
-from alphaxiv.models.mcp import RemovePapersArguments
-from alphaxiv.models.mcp import RenameFolderArguments
-from alphaxiv.models.mcp import SavePapersArguments
+import axiv.commands.library as library_command
+from axiv.cli import app
+from axiv.models.library import LibraryFolder
+from axiv.models.library import LibraryListResult
+from axiv.models.library import LibraryMutationResult
+from axiv.models.library import LibraryPaper
+from axiv.models.library import PaperMembership
+from axiv.models.mcp import CreateFolderArguments
+from axiv.models.mcp import DeleteFolderArguments
+from axiv.models.mcp import ListLibraryArguments
+from axiv.models.mcp import McpInitializeResult
+from axiv.models.mcp import MovePapersArguments
+from axiv.models.mcp import RemovePapersArguments
+from axiv.models.mcp import RenameFolderArguments
+from axiv.models.mcp import SavePapersArguments
 
 runner = CliRunner()
 

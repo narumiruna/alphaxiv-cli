@@ -5,19 +5,19 @@ import pytest
 from pydantic import ValidationError
 from rich.console import Console
 
-from alphaxiv.errors import ExitCode
-from alphaxiv.errors import InvalidResponseError
-from alphaxiv.errors import NotFoundError
-from alphaxiv.errors import PermissionDeniedError
-from alphaxiv.errors import RateLimitError
-from alphaxiv.errors import RemoteAPIError
-from alphaxiv.errors import map_http_error
-from alphaxiv.models.search import PaperSearchResult
-from alphaxiv.models.search import PaperSearchResults
-from alphaxiv.output import render_error
-from alphaxiv.output import render_json
-from alphaxiv.output import render_table
-from alphaxiv.output import render_text
+from axiv.errors import ExitCode
+from axiv.errors import InvalidResponseError
+from axiv.errors import NotFoundError
+from axiv.errors import PermissionDeniedError
+from axiv.errors import RateLimitError
+from axiv.errors import RemoteAPIError
+from axiv.errors import map_http_error
+from axiv.models.search import PaperSearchResult
+from axiv.models.search import PaperSearchResults
+from axiv.output import render_error
+from axiv.output import render_json
+from axiv.output import render_table
+from axiv.output import render_text
 
 
 def make_response(status_code: int, payload: object) -> httpx.Response:

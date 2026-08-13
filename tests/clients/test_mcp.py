@@ -3,22 +3,22 @@ from types import SimpleNamespace
 import anyio
 import pytest
 
-import alphaxiv.clients.mcp as mcp_client_module
-from alphaxiv.clients.mcp import McpClient
-from alphaxiv.errors import InputError
-from alphaxiv.errors import PermissionDeniedError
-from alphaxiv.errors import RemoteAPIError
-from alphaxiv.models.mcp import AnswerPdfQueriesArguments
-from alphaxiv.models.mcp import CreateFolderArguments
-from alphaxiv.models.mcp import DeleteFolderArguments
-from alphaxiv.models.mcp import DiscoverPapersArguments
-from alphaxiv.models.mcp import GetPaperContentArguments
-from alphaxiv.models.mcp import GithubRepositoryArguments
-from alphaxiv.models.mcp import ListLibraryArguments
-from alphaxiv.models.mcp import MovePapersArguments
-from alphaxiv.models.mcp import RemovePapersArguments
-from alphaxiv.models.mcp import RenameFolderArguments
-from alphaxiv.models.mcp import SavePapersArguments
+import axiv.clients.mcp as mcp_client_module
+from axiv.clients.mcp import McpClient
+from axiv.errors import InputError
+from axiv.errors import PermissionDeniedError
+from axiv.errors import RemoteAPIError
+from axiv.models.mcp import AnswerPdfQueriesArguments
+from axiv.models.mcp import CreateFolderArguments
+from axiv.models.mcp import DeleteFolderArguments
+from axiv.models.mcp import DiscoverPapersArguments
+from axiv.models.mcp import GetPaperContentArguments
+from axiv.models.mcp import GithubRepositoryArguments
+from axiv.models.mcp import ListLibraryArguments
+from axiv.models.mcp import MovePapersArguments
+from axiv.models.mcp import RemovePapersArguments
+from axiv.models.mcp import RenameFolderArguments
+from axiv.models.mcp import SavePapersArguments
 
 
 class FakeStreamContext:

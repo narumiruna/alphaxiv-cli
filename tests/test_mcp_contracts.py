@@ -1,12 +1,12 @@
 import pytest
 from pydantic import ValidationError
 
-from alphaxiv.clients.mcp import McpClient
-from alphaxiv.contracts.mcp import MCP_TOOLS
-from alphaxiv.contracts.mcp import McpAccess
-from alphaxiv.contracts.mcp import McpQuota
-from alphaxiv.contracts.mcp import McpToolName
-from alphaxiv.models.mcp import DiscoverPapersArguments
+from axiv.clients.mcp import McpClient
+from axiv.contracts.mcp import MCP_TOOLS
+from axiv.contracts.mcp import McpAccess
+from axiv.contracts.mcp import McpQuota
+from axiv.contracts.mcp import McpToolName
+from axiv.models.mcp import DiscoverPapersArguments
 
 
 def test_static_mcp_contracts_cover_exact_official_tool_surface() -> None:

@@ -7,12 +7,12 @@ import httpx
 import pytest
 from pydantic import BaseModel
 
-from alphaxiv.clients.public_rest import PublicRestClient
-from alphaxiv.errors import InvalidResponseError
-from alphaxiv.errors import NetworkError
-from alphaxiv.errors import NotFoundError
-from alphaxiv.models.feed import FeedInterval
-from alphaxiv.models.feed import FeedSort
+from axiv.clients.public_rest import PublicRestClient
+from axiv.errors import InvalidResponseError
+from axiv.errors import NetworkError
+from axiv.errors import NotFoundError
+from axiv.models.feed import FeedInterval
+from axiv.models.feed import FeedSort
 
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "api" / "responses.json"
 RESPONSES = json.loads(FIXTURE.read_text())

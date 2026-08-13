@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from alphaxiv.clients.public_rest import PublicRestClient
+from axiv.clients.public_rest import PublicRestClient
 
 pytestmark = pytest.mark.skipif(
     os.getenv("ALPHAXIV_LIVE") != "1",

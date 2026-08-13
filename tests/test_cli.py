@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from alphaxiv.cli import app
+from axiv.cli import app
 
 runner = CliRunner()
 

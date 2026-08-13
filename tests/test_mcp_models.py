@@ -4,17 +4,17 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from alphaxiv.models.library import ExternalLibraryResponse
-from alphaxiv.models.library import LibraryFolder
-from alphaxiv.models.library import LibraryListResult
-from alphaxiv.models.library import LibraryMutationResult
-from alphaxiv.models.mcp import AnswerPdfQueriesArguments
-from alphaxiv.models.mcp import AuthStatusResult
-from alphaxiv.models.mcp import CreateFolderArguments
-from alphaxiv.models.mcp import DiscoverPapersArguments
-from alphaxiv.models.mcp import GithubRepositoryArguments
-from alphaxiv.models.mcp import McpTextResult
-from alphaxiv.models.mcp import SavePapersArguments
+from axiv.models.library import ExternalLibraryResponse
+from axiv.models.library import LibraryFolder
+from axiv.models.library import LibraryListResult
+from axiv.models.library import LibraryMutationResult
+from axiv.models.mcp import AnswerPdfQueriesArguments
+from axiv.models.mcp import AuthStatusResult
+from axiv.models.mcp import CreateFolderArguments
+from axiv.models.mcp import DiscoverPapersArguments
+from axiv.models.mcp import GithubRepositoryArguments
+from axiv.models.mcp import McpTextResult
+from axiv.models.mcp import SavePapersArguments
 
 
 def test_discover_arguments_validate_bounds_dates_and_alias_serialization() -> None:

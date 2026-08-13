@@ -1,5 +1,5 @@
 [project]
-name            = "alphaxiv"
+name            = "axiv"
 version         = "0.0.1"
 description     = "Typed Python CLI for alphaXiv's reviewed public REST API"
 readme          = "README.md"
@@ -13,7 +13,7 @@ dependencies    = [
 ]
 
 [project.scripts]
-alphaxiv = "alphaxiv.cli:app"
+axiv = "axiv.cli:app"
 
 [dependency-groups]
 dev = [

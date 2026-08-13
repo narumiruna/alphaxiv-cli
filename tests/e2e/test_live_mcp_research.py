@@ -3,8 +3,8 @@ import os
 import anyio
 import pytest
 
-from alphaxiv.clients.mcp import McpClient
-from alphaxiv.models.mcp import GetPaperContentArguments
+from axiv.clients.mcp import McpClient
+from axiv.models.mcp import GetPaperContentArguments
 
 pytestmark = pytest.mark.skipif(
     os.getenv("ALPHAXIV_LIVE_RESEARCH") != "1" or not os.getenv("ALPHAXIV_API_KEY"),

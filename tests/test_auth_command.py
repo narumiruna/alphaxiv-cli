@@ -4,12 +4,12 @@ from typing import Self
 import pytest
 from typer.testing import CliRunner
 
-import alphaxiv.commands.auth as auth_command
-from alphaxiv.cli import app
-from alphaxiv.errors import PermissionDeniedError
-from alphaxiv.models.mcp import McpInitializeResult
-from alphaxiv.models.mcp import McpToolDescription
-from alphaxiv.models.mcp import McpToolList
+import axiv.commands.auth as auth_command
+from axiv.cli import app
+from axiv.errors import PermissionDeniedError
+from axiv.models.mcp import McpInitializeResult
+from axiv.models.mcp import McpToolDescription
+from axiv.models.mcp import McpToolList
 
 runner = CliRunner()
 
@@ -38,7 +38,7 @@ class FakeMcpClient:
 
 
 def compatible_tools() -> McpToolList:
-    from alphaxiv.contracts.mcp import MCP_TOOLS
+    from axiv.contracts.mcp import MCP_TOOLS
 
     return McpToolList(
         tools=tuple(

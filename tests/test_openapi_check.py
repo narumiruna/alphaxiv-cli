@@ -2,9 +2,9 @@ import copy
 import json
 from pathlib import Path
 
-from alphaxiv.contracts.openapi import OpenAPIDocument
-from alphaxiv.contracts.openapi import check_openapi_document
-from alphaxiv.openapi_check import load_packaged_baseline
+from axiv.contracts.openapi import OpenAPIDocument
+from axiv.contracts.openapi import check_openapi_document
+from axiv.openapi_check import load_packaged_baseline
 
 FIXTURE = Path(__file__).parent / "fixtures" / "openapi" / "alphaxiv-rest-subset.json"
 

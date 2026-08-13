@@ -3,9 +3,9 @@ import os
 import anyio
 import pytest
 
-from alphaxiv.clients.mcp import McpClient
-from alphaxiv.contracts.mcp import check_mcp_tools
-from alphaxiv.models.mcp import ListLibraryArguments
+from axiv.clients.mcp import McpClient
+from axiv.contracts.mcp import check_mcp_tools
+from axiv.models.mcp import ListLibraryArguments
 
 pytestmark = pytest.mark.skipif(
     os.getenv("ALPHAXIV_LIVE") != "1" or not os.getenv("ALPHAXIV_API_KEY"),

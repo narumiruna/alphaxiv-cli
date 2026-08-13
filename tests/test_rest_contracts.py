@@ -4,10 +4,10 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from alphaxiv.contracts.rest import API_BASE_URL
-from alphaxiv.contracts.rest import ENDPOINTS
-from alphaxiv.contracts.rest import EndpointName
-from alphaxiv.contracts.rest import RestEndpoint
+from axiv.contracts.rest import API_BASE_URL
+from axiv.contracts.rest import ENDPOINTS
+from axiv.contracts.rest import EndpointName
+from axiv.contracts.rest import RestEndpoint
 
 FIXTURE = Path(__file__).parent / "fixtures" / "openapi" / "alphaxiv-rest-subset.json"
 

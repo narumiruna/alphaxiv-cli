@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typer.main import get_command
 
-from alphaxiv.cli import app
+from axiv.cli import app
 
 SKILL_DIR = Path(__file__).parents[1] / "skills" / "using-alphaxiv-cli"
 SKILL_FILE = SKILL_DIR / "SKILL.md"

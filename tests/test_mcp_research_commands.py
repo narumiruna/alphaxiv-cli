@@ -4,16 +4,16 @@ from typing import Self
 import pytest
 from typer.testing import CliRunner
 
-import alphaxiv.commands.paper as paper_command
-import alphaxiv.commands.research as research_command
-from alphaxiv.cli import app
-from alphaxiv.errors import RateLimitError
-from alphaxiv.models.mcp import AnswerPdfQueriesArguments
-from alphaxiv.models.mcp import DiscoverPapersArguments
-from alphaxiv.models.mcp import GetPaperContentArguments
-from alphaxiv.models.mcp import GithubRepositoryArguments
-from alphaxiv.models.mcp import McpInitializeResult
-from alphaxiv.models.mcp import McpTextResult
+import axiv.commands.paper as paper_command
+import axiv.commands.research as research_command
+from axiv.cli import app
+from axiv.errors import RateLimitError
+from axiv.models.mcp import AnswerPdfQueriesArguments
+from axiv.models.mcp import DiscoverPapersArguments
+from axiv.models.mcp import GetPaperContentArguments
+from axiv.models.mcp import GithubRepositoryArguments
+from axiv.models.mcp import McpInitializeResult
+from axiv.models.mcp import McpTextResult
 
 runner = CliRunner()
 
