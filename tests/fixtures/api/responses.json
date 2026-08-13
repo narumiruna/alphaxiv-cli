@@ -1,0 +1,162 @@
+{
+  "search_fast": [
+    {
+      "paperId": "1706.03762",
+      "title": "Attention Is All You Need",
+      "link": "/abs/1706.03762",
+      "snippet": "Transformer architecture"
+    }
+  ],
+  "search_full_text": [
+    {
+      "paperId": "1706.03762",
+      "title": "Attention Is All You Need",
+      "abstract": "An abstract.",
+      "publicationDate": "2017-06-13T00:57:34.000Z",
+      "votes": 10,
+      "snippets": [{"pageNumber": 1, "snippet": "Self-attention"}]
+    }
+  ],
+  "search_rich": [
+    {
+      "id": "015c9ef4-ac30-768d-928b-847320902575",
+      "paper_group_id": "015c9ef4-ac30-768d-928b-847320902575",
+      "version_id": "0189b531-a930-7613-9d2e-dd918c8435a5",
+      "universal_paper_id": "1706.03762",
+      "title": "Attention Is All You Need",
+      "abstract": "An abstract."
+    }
+  ],
+  "closest_topic": {"data": ["transformers", "attention-mechanisms"]},
+  "organizations": [{"id": "org-1", "name": "MIT", "slug": "mit", "image": null}],
+  "researchers": {
+    "researchers": [{"slug": "researcher", "name": "Researcher", "newField": true}],
+    "nextOffset": 24
+  },
+  "events": [
+    {
+      "id": "event-1",
+      "title": "Research Talk",
+      "speaker": null,
+      "organization": "MIT",
+      "link": "https://example.com/talk",
+      "date": "2026-08-13",
+      "recording": null
+    }
+  ],
+  "feed": {
+    "page": 0,
+    "papers": [
+      {
+        "id": "015c9ef4-ac30-768d-928b-847320902575",
+        "paper_group_id": "015c9ef4-ac30-768d-928b-847320902575",
+        "version_id": "0189b531-a930-7613-9d2e-dd918c8435a5",
+        "universal_paper_id": "1706.03762",
+        "title": "Attention Is All You Need",
+        "abstract": "An abstract."
+      }
+    ]
+  },
+  "topic_groups": {
+    "topicGroups": [
+      {"group": "Deep Learning", "count": 1, "subtopics": [{"subtopic": "LLMs", "count": 1}]}
+    ]
+  },
+  "legacy_paper": {
+    "paper": {
+      "paper_version": {
+        "id": "0189b531-a930-7613-9d2e-dd918c8435a5",
+        "universal_paper_id": "1706.03762",
+        "title": "Attention Is All You Need",
+        "abstract": "An abstract.",
+        "version_label": "v7"
+      },
+      "paper_group": {
+        "id": "015c9ef4-ac30-768d-928b-847320902575",
+        "universal_paper_id": "1706.03762"
+      }
+    },
+    "comments": []
+  },
+  "paper": {
+    "type": "public",
+    "groupId": "015c9ef4-ac30-768d-928b-847320902575",
+    "versionId": "0189b531-a930-7613-9d2e-dd918c8435a5",
+    "universalId": "1706.03762",
+    "versionLabel": "v7",
+    "versionOrder": 7,
+    "title": "Attention Is All You Need",
+    "abstract": "An abstract."
+  },
+  "preview": {
+    "id": "015c9ef4-ac30-768d-928b-847320902575",
+    "paper_group_id": "015c9ef4-ac30-768d-928b-847320902575",
+    "version_id": "0189b531-a930-7613-9d2e-dd918c8435a5",
+    "universal_paper_id": "1706.03762",
+    "title": "Attention Is All You Need",
+    "abstract": "An abstract."
+  },
+  "full_text": {"pages": [{"pageNumber": 1, "text": "Page text"}]},
+  "overview": {
+    "title": "Attention Is All You Need",
+    "abstract": "An abstract.",
+    "overview": "Overview text",
+    "summary": null,
+    "citations": []
+  },
+  "overview_status": {"state": "done", "updatedAt": 1, "translations": {}},
+  "comments": [
+    {
+      "id": "comment-1",
+      "author": {"id": "user-1", "username": "reader", "realName": "Reader"},
+      "title": "A comment",
+      "body": "Comment body",
+      "date": "2026-08-13T00:00:00.000Z",
+      "upvotes": 1,
+      "universalId": "1706.03762",
+      "paperGroupId": "015c9ef4-ac30-768d-928b-847320902575",
+      "paperVersionId": "0189b531-a930-7613-9d2e-dd918c8435a5",
+      "responses": [
+        {
+          "id": "reply-1",
+          "author": {"id": "user-2", "username": "author", "realName": "Author"},
+          "title": null,
+          "body": "Reply body",
+          "date": "2026-08-13T01:00:00.000Z",
+          "upvotes": 0,
+          "universalId": "1706.03762",
+          "paperGroupId": "015c9ef4-ac30-768d-928b-847320902575",
+          "paperVersionId": "0189b531-a930-7613-9d2e-dd918c8435a5",
+          "parentCommentId": "comment-1",
+          "responses": []
+        }
+      ]
+    }
+  ],
+  "similar": [
+    {
+      "id": "group-2",
+      "paper_group_id": "group-2",
+      "version_id": "version-2",
+      "universal_paper_id": "1706.03763",
+      "title": "Related Paper",
+      "abstract": "Related abstract."
+    }
+  ],
+  "metrics": {"commentsCount": 1, "publicTotalVotes": 2, "visitsAll": 3},
+  "figures": {"figures": ["figures/1706.03762v7/figure.png"]},
+  "extras": {"links": [], "repoUrl": null, "autoresearch": false, "featuredTweets": null},
+  "implementations": {"alphaXivImplementations": [], "paperResources": []},
+  "autoresearch": {"implementations": []},
+  "ai_detection": {
+    "state": "done",
+    "fractionAi": 0,
+    "fractionAiAssisted": 0,
+    "fractionHuman": 1,
+    "predictionShort": "Human",
+    "headline": "Human written",
+    "windows": [],
+    "updatedAt": 1
+  },
+  "model_links": {"state": "done", "matches": [], "updatedAt": 1, "isOutdated": false}
+}
