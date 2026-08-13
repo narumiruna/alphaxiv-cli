@@ -9,7 +9,7 @@ Use only the published `axiv` CLI commands in this repository.
 
 Use an installed `axiv` executable when available.
 
-From this source checkout, fall back to `uv run --python 3.12 axiv` as the command prefix when `axiv` is not installed.
+From this source checkout, fall back to `uv run axiv` as the command prefix when `axiv` is not installed.
 
 Stop and report the installation error when neither command prefix can show CLI help.
 
