@@ -20,6 +20,10 @@ alphaXiv 也在 `https://api.alphaxiv.org` 提供 JSON REST API。
 
 登入後的 `Settings → MCP/API` 頁面明確允許使用 API Key 存取使用者的個人書庫與論文。
 
+實測顯示 API Key 只適用於 MCP、個人書庫及白名單內的論文端點，不能取代完整的 Web 登入工作階段。
+
+部分匿名公開端點在加入 API Key 後反而回傳 `403`，因此用戶端必須依路由決定是否附加驗證標頭。
+
 生產環境沒有公開的 REST OpenAPI 文件，但 alphaXiv 的開發環境公開了一份包含內部與管理端點的 OpenAPI 規格。
 
 因此，本專案應優先採用官方 MCP API，並只在 MCP 無法滿足需求時使用少量、經驗證的 REST 端點。
@@ -161,7 +165,7 @@ curl \
   'https://api.alphaxiv.org/folders/v3'
 ```
 
-本次研究沒有使用或顯示任何完整 API Key。
+本次研究沒有輸出或記錄任何完整 API Key。
 
 ### 私人論文能力
 
@@ -172,6 +176,123 @@ curl \
 這些路由沒有消費者文件，而且未在本次研究中測試。
 
 除非 alphaXiv 提供進一步文件或書面許可，本專案不應實作私人論文上傳與修改功能。
+
+## API Key 實測結果
+
+### 測試範圍
+
+本節記錄 2026-08-13 使用 `.env` 中 `ALPHAXIV_API_KEY` 的實測結果。
+
+測試只記錄 HTTP 狀態、Content-Type、回應大小與結構，不記錄個人資料或完整回應內容。
+
+OpenAPI 共包含 299 個操作，其中 176 個不是 `GET`，因此沒有自動呼叫。
+
+其餘 123 個 `GET` 中包含管理、指標、資料匯入、批次工作、大型匯出及需要未知資源識別碼的路由。
+
+本次選出 45 個安全且具代表性的 REST `GET` 進行生產環境測試。
+
+所有測試皆未呼叫 admin、moderator、metrics、ingest、kickoff、unsubscribe 或遠端寫入操作。
+
+### 主機與金鑰有效性
+
+相同的 API Key 在生產與開發主機呈現不同結果。
+
+| 主機 | 測試 | 結果 | 判讀 |
+| --- | --- | --- | --- |
+| `api.alphaxiv.org` | `GET /users/v3` | `403` | 金鑰有效，但該路由明確拒絕 API Key。 |
+| `api.alphaxiv.org` | `GET /folders/v3` | `200` | 金鑰可讀取個人書庫。 |
+| `api-dev.alphaxiv.org` | `GET /users/v3` | `401` | 生產 API Key 在開發主機無效。 |
+| `api-dev.alphaxiv.org` | `GET /folders/v3` | `401` | 開發主機不接受該生產 API Key。 |
+
+開發 OpenAPI 應作為路由目錄使用，但實際呼叫應送往 `https://api.alphaxiv.org`。
+
+### REST 整體結果
+
+45 個帶有 Bearer API Key 的 REST `GET` 結果如下。
+
+| 結果 | 數量 |
+| --- | ---: |
+| `HTTP 200` | 20 |
+| `HTTP 403` | 25 |
+
+全部 25 個 `403` 都回傳相同原因：`API keys cannot access this endpoint`。
+
+這表示 API Key 使用路由白名單，而不是提供與登入 Cookie 相同的完整權限。
+
+### 成功的 REST 類型
+
+以下路由或路由群組以 API Key 呼叫時回傳 `HTTP 200`。
+
+| 類型 | 已驗證路由 |
+| --- | --- |
+| 個人書庫 | `/folders/v3` |
+| 論文提交讀取 | `/papers/v3/submissions/current`、`/papers/v3/submissions/versionable-groups` |
+| 論文動態 | `/papers/v3/feed` |
+| 會議主題 | `/papers/v3/icml-topics` |
+| 論文解析 | `/papers/v3/legacy/{id}`、`/papers/v3/{id}`、`/papers/v3/{id}/preview` |
+| 論文內容 | `/papers/v3/{versionId}/full-text`、`/papers/v3/{versionId}/overview/{language}`、`/papers/v3/{versionId}/overview/status` |
+| 論文關聯資料 | comments、similar-papers、metrics、figures、extras、implementations、autoresearch-implementations |
+| 論文分析 | ai-detection、model-links |
+
+論文測試使用公開的 `1706.03762`，15 個代表性論文端點全部回傳 `HTTP 200`。
+
+### 明確拒絕 API Key 的 REST 類型
+
+以下帳號或 Web 功能端點回傳 `HTTP 403`。
+
+- `/users/v3`
+- `/assistant/v2`
+- `/assistant/v2/usage`
+- `/billing/v1`
+- `/researchers/v1/following`
+- `/researchers/v1/my-claims`
+- `/oauth-grants/v1`
+- `/google-scholar/v1/status`
+- `/v2/users/preferences/email`
+- `/v2/users/preferences/folders`
+- `/users/v3/notifications`
+- `/users/v3/viewed-history`
+- `/users/v3/emails`
+
+這項結果確認 API Key 不能取代完整的 Web 登入工作階段，也不能直接存取 Assistant REST API。
+
+### 公開端點的驗證標頭陷阱
+
+12 個原本可匿名讀取的公開端點，在加入有效 API Key 後反而從 `200` 變成 `403`。
+
+代表性端點包括：
+
+- `/events/v1`
+- `/organizations/v2/top`
+- `/organizations/v2/search`
+- `/search/v2/paper/fast`
+- `/search/v2/paper/full-text`
+- `/v1/search/paper`
+- `/v1/search/closest-topic`
+- `/researchers/v1`
+- `/researchers/v1/search`
+- `/retrieve/v1/top-papers`
+- `/users/v3/leaderboard`
+
+`/papers/v3/feed` 與 `/papers/v3/icml-topics` 則同時接受匿名與 API Key 呼叫。
+
+因此 HTTP 用戶端不得把 `Authorization` 標頭無條件附加到所有 `api.alphaxiv.org` 請求。
+
+建議為匿名公開 API 與 API Key API 使用不同的用戶端，或以明確路由白名單決定是否加入 Bearer Header。
+
+### MCP API Key 實測
+
+MCP 端點完整接受相同的生產 API Key。
+
+| 操作 | 結果 |
+| --- | --- |
+| `initialize` | `HTTP 200`，協商為 MCP `2025-03-26`。 |
+| `tools/list` | `HTTP 200`，回傳官方文件列出的 11 個工具。 |
+| `tools/call list_library` | `HTTP 200`，`isError=false`。 |
+
+`list_library` 測試沒有要求回傳資料夾內論文，也沒有記錄資料夾名稱或其他個人值。
+
+本次沒有呼叫會消耗 Assistant 配額的研究工具，也沒有呼叫會修改個人書庫的 MCP 工具。
 
 ## OpenAPI 文件調查
 
@@ -280,10 +401,12 @@ Issue #225 發生在目前自助 API Key 與完整 MCP 文件推出之前。
 
 1. 以官方 MCP API 作為搜尋、論文理解、PDF 問答、程式碼閱讀及個人書庫管理的主要後端。
 2. 以 API Key Bearer 驗證作為 CLI 的主要非互動式驗證方式。
-3. 只為 MCP 未涵蓋的確定性讀取功能加入 REST，例如快速搜尋、動態和論文中繼資料。
-4. 將 REST 呼叫集中在獨立的相容層，避免端點變更散布到整個 CLI。
-5. 為每個 REST 端點建立小型線上 contract test，驗證狀態碼與最低必要欄位。
-6. 為遠端寫入加入明確確認，並限制在官方 MCP 個人書庫工具或設定頁面明確允許的用途。
+3. 為匿名公開 REST 建立不含 `Authorization` 標頭的 HTTP 用戶端。
+4. 為個人書庫與論文白名單 REST 建立專用的 API Key HTTP 用戶端。
+5. 只為 MCP 未涵蓋的確定性讀取功能加入 REST，例如快速搜尋、動態和論文中繼資料。
+6. 將 REST 呼叫集中在獨立的相容層，避免端點變更散布到整個 CLI。
+7. 為每個 REST 端點建立小型線上 contract test，驗證狀態碼與最低必要欄位。
+8. 為遠端寫入加入明確確認，並限制在官方 MCP 個人書庫工具或設定頁面明確允許的用途。
 
 ### 不建議實作
 
@@ -313,7 +436,6 @@ Issue #225 發生在目前自助 API Key 與完整 MCP 文件推出之前。
 - alphaXiv 是否會發布經過篩選的正式 REST API 文件。
 - REST API 是否有版本淘汰、相容性或服務等級政策。
 - API Key 對所有論文與個人書庫 REST 端點的精確權限範圍。
-- API Key 是否正式允許直接使用 Assistant REST 讀取端點。
 - 私人論文上傳與修改 API 是否預期開放給一般第三方用戶端。
 - REST 的正式速率限制、批量操作限制及商業授權流程。
 
