@@ -1,8 +1,13 @@
+from typer.main import get_command
 from typer.testing import CliRunner
 
 from axiv.cli import app
 
 runner = CliRunner()
+
+
+def test_root_command_uses_axiv_name() -> None:
+    assert get_command(app).name == "axiv"
 
 
 def test_root_help_lists_static_rest_command_groups() -> None:

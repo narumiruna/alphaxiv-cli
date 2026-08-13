@@ -13,7 +13,7 @@ from axiv.commands import search_app
 from axiv.commands.common import set_debug
 
 app = typer.Typer(
-    name="alphaxiv",
+    name="axiv",
     help="Read alphaXiv through a static, reviewed public REST surface.",
     no_args_is_help=True,
 )
@@ -26,7 +26,7 @@ def main(
         typer.Option("--debug", help="Show tracebacks for unexpected internal errors."),
     ] = False,
 ) -> None:
-    """Configure the alphaXiv CLI."""
+    """Configure the axiv CLI."""
     set_debug(debug)
 
 

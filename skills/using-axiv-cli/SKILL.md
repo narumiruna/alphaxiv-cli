@@ -1,15 +1,15 @@
 ---
-name: using-alphaxiv-cli
-description: Use when discovering or reading alphaXiv papers, asking questions against paper PDFs, exploring paper-linked GitHub code, or listing and managing an authenticated alphaXiv personal library through the alphaxiv CLI.
+name: using-axiv-cli
+description: Use when discovering or reading alphaXiv papers, asking questions against paper PDFs, exploring paper-linked GitHub code, or listing and managing an authenticated alphaXiv personal library through the axiv CLI.
 ---
 
-# Using alphaXiv CLI
+# Using axiv CLI
 
-Use only the published `alphaxiv` CLI commands in this repository.
+Use only the published `axiv` CLI commands in this repository.
 
-Use an installed `alphaxiv` executable when available.
+Use an installed `axiv` executable when available.
 
-From this source checkout, fall back to `uv run --python 3.12 alphaxiv` as the command prefix when `alphaxiv` is not installed.
+From this source checkout, fall back to `uv run --python 3.12 axiv` as the command prefix when `axiv` is not installed.
 
 Stop and report the installation error when neither command prefix can show CLI help.
 
@@ -29,7 +29,7 @@ Tell the user that discover, content, query, and code commands consume Assistant
 
 Stop and report quota exhaustion instead of retrying or substituting another quota-consuming command.
 
-Use `alphaxiv library list --json` to obtain current opaque folder IDs before planning a library change.
+Use `axiv library list --json` to obtain current opaque folder IDs before planning a library change.
 
 Before every remote library write, state the exact CLI operation, folder IDs or names, and paper IDs or URLs that will change.
 

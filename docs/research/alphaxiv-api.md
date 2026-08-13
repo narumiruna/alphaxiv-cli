@@ -443,7 +443,7 @@ MCP client 只連線固定生產 endpoint，API Key 只從 `ALPHAXIV_API_KEY` �
 
 `tools/list` drift check 只比較名稱與 input arguments 並報告差異，不會動態註冊遠端 tool。
 
-`skills/using-alphaxiv-cli/` 只使用正式 CLI，並在缺少金鑰、403、quota、unknown tool、drift 或寫入授權不足時停止。
+`skills/using-axiv-cli/` 只使用正式 CLI，並在缺少金鑰、403、quota、unknown tool、drift 或寫入授權不足時停止。
 
 ### 建議的第一階段功能
 

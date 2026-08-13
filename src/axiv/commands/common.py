@@ -10,7 +10,7 @@ from axiv.errors import RemoteAPIError
 from axiv.output import render_error
 from axiv.output import render_json
 
-_DEBUG = ContextVar("alphaxiv_debug", default=False)
+_DEBUG = ContextVar("axiv_debug", default=False)
 
 
 def set_debug(enabled: bool) -> None:
@@ -30,7 +30,7 @@ def run_operation[ModelT: BaseModel](operation: Callable[[], ModelT]) -> ModelT:
     except Exception as error:
         if _DEBUG.get():
             raise
-        safe_error = RemoteAPIError("unexpected alphaXiv CLI error")
+        safe_error = RemoteAPIError("unexpected axiv CLI error")
         render_error(safe_error)
         raise typer.Exit(code=int(safe_error.exit_code)) from error
 

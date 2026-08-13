@@ -5,7 +5,7 @@ from typer.main import get_command
 
 from axiv.cli import app
 
-SKILL_DIR = Path(__file__).parents[1] / "skills" / "using-alphaxiv-cli"
+SKILL_DIR = Path(__file__).parents[1] / "skills" / "using-axiv-cli"
 SKILL_FILE = SKILL_DIR / "SKILL.md"
 
 
@@ -64,7 +64,7 @@ def test_skill_prose_uses_one_sentence_per_line() -> None:
 def test_command_map_references_only_registered_cli_commands() -> None:
     command_map = (SKILL_DIR / "references" / "command-map.md").read_text()
     referenced: set[tuple[str, ...]] = set()
-    for invocation in re.findall(r"`(alphaxiv [^`]+)`", command_map):
+    for invocation in re.findall(r"`(axiv [^`]+)`", command_map):
         path = []
         for token in invocation.split()[1:]:
             if token.startswith("-") or token[:1].isupper():

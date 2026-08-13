@@ -42,7 +42,7 @@ def _load_resource(resource: TextResource, *, label: str) -> OpenAPIDocument:
 
 
 def load_packaged_baseline() -> OpenAPIDocument:
-    resource = files("alphaxiv").joinpath("resources/openapi-rest-subset.json")
+    resource = files("axiv").joinpath("resources/openapi-rest-subset.json")
     return _load_resource(resource, label="packaged REST subset")
 
 

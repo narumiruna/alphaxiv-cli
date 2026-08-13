@@ -5,6 +5,7 @@ import pytest
 from pydantic import ValidationError
 from rich.console import Console
 
+from axiv.errors import AlphaXivError
 from axiv.errors import ExitCode
 from axiv.errors import InvalidResponseError
 from axiv.errors import NotFoundError
@@ -45,6 +46,10 @@ def test_http_errors_map_to_stable_types_and_exit_codes(
     assert isinstance(error, error_type)
     assert error.exit_code == exit_code
     assert str(error) == "safe message"
+
+
+def test_base_error_uses_axiv_code() -> None:
+    assert AlphaXivError("failed").code == "axiv_error"
 
 
 def test_http_error_message_is_bounded_and_control_characters_are_removed() -> None:

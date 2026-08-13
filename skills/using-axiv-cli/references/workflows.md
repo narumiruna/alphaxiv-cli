@@ -1,30 +1,30 @@
-# alphaXiv CLI Workflows
+# axiv CLI Workflows
 
 ## Literature Review
 
-Run `alphaxiv auth status --json` and stop if authentication or tool compatibility fails.
+Run `axiv auth status --json` and stop if authentication or tool compatibility fails.
 
 Confirm that the user wants a quota-consuming discovery call when their request does not already make that intent clear.
 
-Run `alphaxiv research discover` with only the user's question, stated keywords, requested dates, difficulty, and priority.
+Run `axiv research discover` with only the user's question, stated keywords, requested dates, difficulty, and priority.
 
-Use `alphaxiv paper query` once per selected paper with every question for that paper batched as repeated `--query` options.
+Use `axiv paper query` once per selected paper with every question for that paper batched as repeated `--query` options.
 
 Synthesize only claims supported by returned paper content and identify gaps without silently spending more quota.
 
 ## Single-Paper Research
 
-Use `alphaxiv paper content PAPER --json` for the intermediate report.
+Use `axiv paper content PAPER --json` for the intermediate report.
 
 Use `--full-text` only when raw extracted text is necessary or the report is insufficient.
 
-Use `alphaxiv paper query` for page-level evidence and batch related questions in one call.
+Use `axiv paper query` for page-level evidence and batch related questions in one call.
 
 Stop on an unresolved paper, quota exhaustion, or content that does not support the requested conclusion.
 
 ## PDF Evidence Extraction
 
-Keep all questions about one paper in one `alphaxiv paper query` command.
+Keep all questions about one paper in one `axiv paper query` command.
 
 Preserve the returned page identifiers when citing evidence.
 
@@ -36,7 +36,7 @@ Run another quota-consuming query only after the user authorizes the additional 
 
 Obtain the paper's actual GitHub URL from a paper result or from the user.
 
-Run `alphaxiv paper code REPOSITORY / --json` to inspect the repository tree and top-level files.
+Run `axiv paper code REPOSITORY / --json` to inspect the repository tree and top-level files.
 
 Read only the specific files or directories needed to verify the claim.
 
@@ -44,7 +44,7 @@ Stop if the repository is not on HTTPS GitHub, the path is ambiguous, or the cod
 
 ## Personal Library Organization
 
-Run `alphaxiv library list --json` to resolve folder names to opaque folder IDs.
+Run `axiv library list --json` to resolve folder names to opaque folder IDs.
 
 Draft the exact write command without `--yes` and state every target folder and paper.
 

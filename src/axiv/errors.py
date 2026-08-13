@@ -24,7 +24,7 @@ def _safe_message(value: object, *, fallback: str = "alphaXiv request failed") -
 
 
 class AlphaXivError(Exception):
-    code = "alphaxiv_error"
+    code = "axiv_error"
     exit_code = ExitCode.REMOTE
 
     def __init__(self, message: str) -> None:

@@ -1,6 +1,6 @@
-# alphaxiv-cli
+# axiv
 
-`alphaxiv` is a typed Python CLI for alphaXiv's reviewed public REST reads and official MCP research and library tools.
+`axiv` is a typed Python CLI for alphaXiv's reviewed public REST reads and official MCP research and library tools.
 
 The CLI uses Typer, HTTPX, the official MCP Python SDK, and `pydantic.BaseModel`.
 
@@ -8,18 +8,18 @@ It does not dynamically expose OpenAPI operations, arbitrary HTTP requests, or a
 
 ## Install
 
-Install the `alphaxiv` command from a source checkout with uv.
+Install the `axiv` command from a source checkout with uv.
 
 ```bash
 uv tool install .
-alphaxiv --help
+axiv --help
 ```
 
 For development, install the locked environment and run the CLI from the checkout.
 
 ```bash
 uv sync --python 3.12
-uv run --python 3.12 alphaxiv --help
+uv run --python 3.12 axiv --help
 ```
 
 ## Commands
@@ -27,36 +27,36 @@ uv run --python 3.12 alphaxiv --help
 Search public papers, extracted text, topics, and organizations.
 
 ```bash
-uv run --python 3.12 alphaxiv search papers "transformer" --limit 5
-uv run --python 3.12 alphaxiv search full-text "scaled dot-product attention" --limit 3
-uv run --python 3.12 alphaxiv search topics "transformer"
-uv run --python 3.12 alphaxiv search organizations "MIT"
+uv run --python 3.12 axiv search papers "transformer" --limit 5
+uv run --python 3.12 axiv search full-text "scaled dot-product attention" --limit 3
+uv run --python 3.12 axiv search topics "transformer"
+uv run --python 3.12 axiv search organizations "MIT"
 ```
 
 Browse researchers, events, feeds, and topic groups.
 
 ```bash
-uv run --python 3.12 alphaxiv researchers list --limit 5
-uv run --python 3.12 alphaxiv researchers search "Yann LeCun" --limit 5
-uv run --python 3.12 alphaxiv events list --limit 5
-uv run --python 3.12 alphaxiv feed list --sort Recent --interval "7 Days" --limit 5
-uv run --python 3.12 alphaxiv feed topics
+uv run --python 3.12 axiv researchers list --limit 5
+uv run --python 3.12 axiv researchers search "Yann LeCun" --limit 5
+uv run --python 3.12 axiv events list --limit 5
+uv run --python 3.12 axiv feed list --sort Recent --interval "7 Days" --limit 5
+uv run --python 3.12 axiv feed topics
 ```
 
 Read paper metadata and existing derived data without starting remote generation jobs.
 
 ```bash
-uv run --python 3.12 alphaxiv paper show 1706.03762
-uv run --python 3.12 alphaxiv paper preview 1706.03762
-uv run --python 3.12 alphaxiv paper text 1706.03762 --page 1
-uv run --python 3.12 alphaxiv paper overview 1706.03762 --language en
-uv run --python 3.12 alphaxiv paper related 1706.03762 --kind metrics
+uv run --python 3.12 axiv paper show 1706.03762
+uv run --python 3.12 axiv paper preview 1706.03762
+uv run --python 3.12 axiv paper text 1706.03762 --page 1
+uv run --python 3.12 axiv paper overview 1706.03762 --language en
+uv run --python 3.12 axiv paper related 1706.03762 --kind metrics
 ```
 
 Add `--json` to any read command for stable machine-readable output.
 
 ```bash
-uv run --python 3.12 alphaxiv search papers "transformer" --limit 1 --json
+uv run --python 3.12 axiv search papers "transformer" --limit 1 --json
 ```
 
 Search and list commands enforce conservative result limits.
@@ -69,7 +69,7 @@ Create an API key in alphaXiv's MCP/API settings and provide it only through the
 
 ```bash
 export ALPHAXIV_API_KEY="your-key"
-uv run --python 3.12 alphaxiv auth status --json
+uv run --python 3.12 axiv auth status --json
 ```
 
 The CLI does not accept `--api-key`, browser cookies, or arbitrary MCP endpoints.
@@ -77,10 +77,10 @@ The CLI does not accept `--api-key`, browser cookies, or arbitrary MCP endpoints
 Research commands call alphaXiv Assistant models and consume Assistant quota.
 
 ```bash
-uv run --python 3.12 alphaxiv research discover "How do transformers use attention?" --keyword transformer --keyword attention --json
-uv run --python 3.12 alphaxiv paper content 1706.03762 --json
-uv run --python 3.12 alphaxiv paper query 1706.03762 --query "What datasets were used?" --json
-uv run --python 3.12 alphaxiv paper code https://github.com/owner/repository / --json
+uv run --python 3.12 axiv research discover "How do transformers use attention?" --keyword transformer --keyword attention --json
+uv run --python 3.12 axiv paper content 1706.03762 --json
+uv run --python 3.12 axiv paper query 1706.03762 --query "What datasets were used?" --json
+uv run --python 3.12 axiv paper code https://github.com/owner/repository / --json
 ```
 
 Batch every question for one paper as repeated `--query` options to avoid unnecessary quota use.
@@ -88,20 +88,20 @@ Batch every question for one paper as repeated `--query` options to avoid unnece
 Library listing is read only and does not load papers unless `--include-papers` is supplied.
 
 ```bash
-uv run --python 3.12 alphaxiv library list --json
+uv run --python 3.12 axiv library list --json
 ```
 
 Every remote library write requires `--yes` and an exact folder and paper target.
 
 ```bash
-uv run --python 3.12 alphaxiv library save FOLDER_ID 1706.03762 --yes --json
-uv run --python 3.12 alphaxiv library move SOURCE_FOLDER TARGET_FOLDER 1706.03762 --yes --json
-uv run --python 3.12 alphaxiv library folder create "Reading list" --yes --json
+uv run --python 3.12 axiv library save FOLDER_ID 1706.03762 --yes --json
+uv run --python 3.12 axiv library move SOURCE_FOLDER TARGET_FOLDER 1706.03762 --yes --json
+uv run --python 3.12 axiv library folder create "Reading list" --yes --json
 ```
 
 For agents, `--yes` does not replace explicit user authorization for the exact remote change.
 
-The source skill at [`skills/using-alphaxiv-cli/`](skills/using-alphaxiv-cli/SKILL.md) defines safe research and library workflows.
+The source skill at [`skills/using-axiv-cli/`](skills/using-axiv-cli/SKILL.md) defines safe research and library workflows.
 
 ## OpenAPI contract check
 

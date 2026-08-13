@@ -326,7 +326,7 @@ def test_unexpected_error_does_not_disclose_details_without_debug(
 
     assert result.exit_code == 6
     assert "private implementation detail" not in result.stderr
-    assert "unexpected alphaXiv CLI error" in result.stderr
+    assert "unexpected axiv CLI error" in result.stderr
 
 
 def test_text_human_output_defaults_to_one_page(fake_client: FakeClient) -> None:

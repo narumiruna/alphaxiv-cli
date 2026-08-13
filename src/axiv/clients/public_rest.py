@@ -67,7 +67,7 @@ class PublicRestClient:
         if http_client is None:
             self._client = httpx.Client(
                 base_url=self._settings.base_url,
-                headers={"Accept": "application/json", "User-Agent": "alphaxiv-cli/0.0.0"},
+                headers={"Accept": "application/json", "User-Agent": "axiv/0.0.0"},
                 timeout=self._settings.timeout_seconds,
                 follow_redirects=False,
             )
