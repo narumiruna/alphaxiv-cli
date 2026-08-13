@@ -2,9 +2,12 @@ from typing import Annotated
 
 import typer
 
+from alphaxiv.commands import auth_app
 from alphaxiv.commands import events_app
 from alphaxiv.commands import feed_app
+from alphaxiv.commands import library_app
 from alphaxiv.commands import paper_app
+from alphaxiv.commands import research_app
 from alphaxiv.commands import researchers_app
 from alphaxiv.commands import search_app
 from alphaxiv.commands.common import set_debug
@@ -27,7 +30,10 @@ def main(
     set_debug(debug)
 
 
+app.add_typer(auth_app, name="auth")
 app.add_typer(search_app, name="search")
+app.add_typer(research_app, name="research")
+app.add_typer(library_app, name="library")
 app.add_typer(researchers_app, name="researchers")
 app.add_typer(events_app, name="events")
 app.add_typer(feed_app, name="feed")
