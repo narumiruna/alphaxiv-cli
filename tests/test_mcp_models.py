@@ -92,6 +92,28 @@ def test_external_library_models_tolerate_additive_fields_but_stable_output_is_s
         LibraryListResult.model_validate({"folders": [], "memberships": [], "unknown": True})
 
 
+def test_library_models_accept_live_paper_and_membership_field_names() -> None:
+    external = ExternalLibraryResponse.model_validate(
+        {
+            "folders": [
+                {
+                    "folder_id": "folder-1",
+                    "name": "Reading",
+                    "type": "custom",
+                    "paper_count": 1,
+                    "papers": [{"universal_paper_id": "1706.03762", "title": "Attention Is All You Need"}],
+                }
+            ],
+            "paper_membership": [{"universal_paper_id": "1706.03762", "in_folders": ["folder-1"]}],
+        }
+    )
+    stable = LibraryListResult.from_external(external)
+
+    assert stable.folders[0].papers[0].paper_id == "1706.03762"
+    assert stable.memberships[0].paper_id == "1706.03762"
+    assert stable.memberships[0].folder_ids == ("folder-1",)
+
+
 def test_mcp_outputs_never_have_an_api_key_field() -> None:
     status = AuthStatusResult(
         api_key_present=True,
