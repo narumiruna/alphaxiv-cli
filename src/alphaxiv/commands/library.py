@@ -70,6 +70,38 @@ async def _delete(arguments: DeleteFolderArguments) -> LibraryMutationResult:
         return await client.delete_folder(arguments)
 
 
+def _render_library(
+    result: LibraryListResult,
+    *,
+    include_papers: bool,
+    include_memberships: bool,
+) -> None:
+    render_table(
+        title="alphaXiv library",
+        columns=("Folder ID", "Name", "Type", "Papers", "Parent"),
+        rows=[
+            (folder.folder_id, folder.name, folder.type, folder.paper_count, folder.parent_id)
+            for folder in result.folders
+        ],
+    )
+    if include_papers:
+        render_table(
+            title="alphaXiv library papers",
+            columns=("Folder ID", "Paper ID", "Title", "URL"),
+            rows=[
+                (folder.folder_id, paper.paper_id, paper.title, paper.url)
+                for folder in result.folders
+                for paper in folder.papers
+            ],
+        )
+    if include_memberships:
+        render_table(
+            title="alphaXiv paper memberships",
+            columns=("Paper ID", "Folder IDs"),
+            rows=[(membership.paper_id, ", ".join(membership.folder_ids)) for membership in result.memberships],
+        )
+
+
 def _emit_mutation(result: LibraryMutationResult, *, json_output: bool) -> None:
     emit(
         result,
@@ -112,13 +144,10 @@ def list_library(
     emit(
         result,
         json_output=json_output,
-        human=lambda: render_table(
-            title="alphaXiv library",
-            columns=("Folder ID", "Name", "Type", "Papers", "Parent"),
-            rows=[
-                (folder.folder_id, folder.name, folder.type, folder.paper_count, folder.parent_id)
-                for folder in result.folders
-            ],
+        human=lambda: _render_library(
+            result,
+            include_papers=include_papers,
+            include_memberships=bool(paper),
         ),
     )
 

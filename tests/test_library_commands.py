@@ -9,6 +9,8 @@ from alphaxiv.cli import app
 from alphaxiv.models.library import LibraryFolder
 from alphaxiv.models.library import LibraryListResult
 from alphaxiv.models.library import LibraryMutationResult
+from alphaxiv.models.library import LibraryPaper
+from alphaxiv.models.library import PaperMembership
 from alphaxiv.models.mcp import CreateFolderArguments
 from alphaxiv.models.mcp import DeleteFolderArguments
 from alphaxiv.models.mcp import ListLibraryArguments
@@ -37,8 +39,15 @@ class FakeMcpClient:
 
     async def list_library(self, arguments: ListLibraryArguments) -> LibraryListResult:
         self.calls.append(("list_library", arguments))
-        folder = LibraryFolder(folder_id="folder-1", name="Reading", type="custom", paper_count=0)
-        return LibraryListResult(folders=(folder,), memberships=())
+        folder = LibraryFolder(
+            folder_id="folder-1",
+            name="Reading",
+            type="custom",
+            paper_count=1,
+            papers=(LibraryPaper(paper_id="paper-1", title="Attention paper", url="https://arxiv.org/abs/1706.03762"),),
+        )
+        membership = PaperMembership(paper_id="paper-1", folder_ids=("folder-1", "folder-2"))
+        return LibraryListResult(folders=(folder,), memberships=(membership,))
 
     def _mutation(self, name: str, arguments: object) -> LibraryMutationResult:
         self.calls.append((name, arguments))
@@ -102,6 +111,24 @@ def test_library_list_defaults_to_no_papers_and_supports_explicit_loading(fake_c
     assert default_arguments.include_papers is False
     assert isinstance(included_arguments, ListLibraryArguments)
     assert included_arguments.include_papers is True
+
+
+def test_library_list_human_output_displays_only_requested_details(fake_client: FakeMcpClient) -> None:
+    default = runner.invoke(app, ["library", "list"])
+    included = runner.invoke(app, ["library", "list", "--include-papers"])
+    membership = runner.invoke(app, ["library", "list", "--paper", "paper-1"])
+
+    assert default.exit_code == 0
+    assert included.exit_code == 0
+    assert membership.exit_code == 0
+    assert "Attention paper" not in default.stdout
+    assert "paper-1" not in default.stdout
+    assert "Attention paper" in included.stdout
+    assert "paper-1" in included.stdout
+    assert "folder-2" not in included.stdout
+    assert "paper-1" in membership.stdout
+    assert "folder-1, folder-2" in membership.stdout
+    assert "Attention paper" not in membership.stdout
 
 
 @pytest.mark.parametrize(
