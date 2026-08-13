@@ -1,14 +1,21 @@
+import asyncio
 from collections.abc import Callable
 from functools import partial
 from typing import Annotated
+from urllib.parse import quote
 
 import typer
 from pydantic import BaseModel
 
+from alphaxiv.clients.mcp import McpClient
 from alphaxiv.clients.public_rest import PublicRestClient
 from alphaxiv.commands.common import emit
 from alphaxiv.commands.common import run_operation
 from alphaxiv.errors import InputError
+from alphaxiv.models.mcp import AnswerPdfQueriesArguments
+from alphaxiv.models.mcp import GetPaperContentArguments
+from alphaxiv.models.mcp import GithubRepositoryArguments
+from alphaxiv.models.mcp import McpTextResult
 from alphaxiv.models.paper import AIDetectionResponse
 from alphaxiv.models.paper import AutoresearchImplementationsResponse
 from alphaxiv.models.paper import ExtrasResponse
@@ -19,6 +26,7 @@ from alphaxiv.models.paper import ModelLinksResponse
 from alphaxiv.models.paper import OverviewResponse
 from alphaxiv.models.paper import OverviewStatus
 from alphaxiv.models.paper import PaperComments
+from alphaxiv.models.paper import PaperIdentifier
 from alphaxiv.models.paper import PaperMetrics
 from alphaxiv.models.paper import PaperPreview
 from alphaxiv.models.paper import PaperRecord
@@ -37,6 +45,31 @@ def _identifiers(client: PublicRestClient, identifier: str) -> ResolvedPaperIden
 
 def _json_human(model: BaseModel) -> Callable[[], None]:
     return lambda: render_text(model.model_dump_json(indent=2))
+
+
+def _paper_url(identifier: str) -> str:
+    if identifier.startswith(("https://", "http://")):
+        return identifier
+    valid = PaperIdentifier(value=identifier).value
+    return f"https://arxiv.org/abs/{quote(valid, safe='/')}"
+
+
+async def _paper_content(arguments: GetPaperContentArguments) -> McpTextResult:
+    async with McpClient() as client:
+        await client.initialize()
+        return await client.get_paper_content(arguments)
+
+
+async def _paper_queries(arguments: AnswerPdfQueriesArguments) -> McpTextResult:
+    async with McpClient() as client:
+        await client.initialize()
+        return await client.answer_pdf_queries(arguments)
+
+
+async def _github_files(arguments: GithubRepositoryArguments) -> McpTextResult:
+    async with McpClient() as client:
+        await client.initialize()
+        return await client.read_github_files(arguments)
 
 
 def _related_human(kind: RelatedKind, model: BaseModel) -> None:
@@ -198,3 +231,54 @@ def related(
 
     result = run_operation(operation)
     emit(result, json_output=json_output, human=lambda: _related_human(kind, result))
+
+
+@app.command("content")
+def content(
+    identifier: Annotated[str, typer.Argument(help="arXiv ID or arXiv/alphaXiv URL.")],
+    full_text: Annotated[bool, typer.Option("--full-text", help="Return raw extracted text.")] = False,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit stable JSON.")] = False,
+) -> None:
+    """Read paper content with an Assistant-quota MCP call."""
+
+    def operation() -> McpTextResult:
+        arguments = GetPaperContentArguments(url=_paper_url(identifier), fullText=full_text)
+        return asyncio.run(_paper_content(arguments))
+
+    result = run_operation(operation)
+    emit(result, json_output=json_output, human=lambda: render_text(result.text))
+
+
+@app.command("query")
+def query_paper(
+    identifier: Annotated[str, typer.Argument(help="Paper ID, URL, or title.")],
+    query: Annotated[
+        list[str] | None,
+        typer.Option("--query", help="Repeat to batch questions for this paper."),
+    ] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit stable JSON.")] = False,
+) -> None:
+    """Extract PDF pages relevant to one or more questions."""
+
+    def operation() -> McpTextResult:
+        arguments = AnswerPdfQueriesArguments(paper=identifier, queries=tuple(query or ()))
+        return asyncio.run(_paper_queries(arguments))
+
+    result = run_operation(operation)
+    emit(result, json_output=json_output, human=lambda: render_text(result.text))
+
+
+@app.command("code")
+def code(
+    repository: Annotated[str, typer.Argument(help="HTTPS github.com repository URL.")],
+    path: Annotated[str, typer.Argument(help="File or directory path; use / for an overview.")],
+    json_output: Annotated[bool, typer.Option("--json", help="Emit stable JSON.")] = False,
+) -> None:
+    """Read paper-related GitHub files with an Assistant-quota MCP call."""
+
+    def operation() -> McpTextResult:
+        arguments = GithubRepositoryArguments(githubUrl=repository, path=path)
+        return asyncio.run(_github_files(arguments))
+
+    result = run_operation(operation)
+    emit(result, json_output=json_output, human=lambda: render_text(result.text))

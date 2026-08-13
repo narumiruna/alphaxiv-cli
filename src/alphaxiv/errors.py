@@ -57,6 +57,10 @@ class RateLimitError(RemoteAPIError):
     exit_code = ExitCode.RATE_LIMIT
 
 
+class ToolDriftError(RemoteAPIError):
+    code = "tool_drift"
+
+
 class InvalidResponseError(RemoteAPIError):
     code = "invalid_response"
 

@@ -1,0 +1,188 @@
+from collections.abc import Mapping
+from enum import StrEnum
+from types import MappingProxyType
+
+from pydantic import ConfigDict
+
+from alphaxiv.models.common import StrictModel
+from alphaxiv.models.mcp import AnswerPdfQueriesArguments
+from alphaxiv.models.mcp import CreateFolderArguments
+from alphaxiv.models.mcp import DeleteFolderArguments
+from alphaxiv.models.mcp import DiscoverPapersArguments
+from alphaxiv.models.mcp import GetPaperContentArguments
+from alphaxiv.models.mcp import GithubRepositoryArguments
+from alphaxiv.models.mcp import ListLibraryArguments
+from alphaxiv.models.mcp import McpArguments
+from alphaxiv.models.mcp import McpToolDriftIssue
+from alphaxiv.models.mcp import McpToolDriftReport
+from alphaxiv.models.mcp import McpToolList
+from alphaxiv.models.mcp import MovePapersArguments
+from alphaxiv.models.mcp import RemovePapersArguments
+from alphaxiv.models.mcp import RenameFolderArguments
+from alphaxiv.models.mcp import SavePapersArguments
+
+MCP_ENDPOINT = "https://api.alphaxiv.org/mcp/v1"
+
+
+class McpToolName(StrEnum):
+    DISCOVER_PAPERS = "discover_papers"
+    GET_PAPER_CONTENT = "get_paper_content"
+    ANSWER_PDF_QUERIES = "answer_pdf_queries"
+    READ_GITHUB_FILES = "read_files_from_github_repository"
+    LIST_LIBRARY = "list_library"
+    SAVE_PAPERS = "save_papers_to_folder"
+    REMOVE_PAPERS = "remove_papers_from_folder"
+    MOVE_PAPERS = "move_papers_between_folders"
+    CREATE_FOLDER = "create_folder"
+    RENAME_FOLDER = "rename_folder"
+    DELETE_FOLDER = "delete_folder"
+
+
+class McpAccess(StrEnum):
+    READ = "read"
+    WRITE = "write"
+
+
+class McpQuota(StrEnum):
+    NONE = "none"
+    ASSISTANT = "assistant"
+
+
+class McpToolContract(StrictModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, arbitrary_types_allowed=True)
+
+    name: McpToolName
+    access: McpAccess
+    quota: McpQuota
+    arguments_model: type[McpArguments]
+    required_arguments: tuple[str, ...]
+
+    @property
+    def argument_names(self) -> tuple[str, ...]:
+        schema = self.arguments_model.model_json_schema(by_alias=True)
+        properties = schema.get("properties", {})
+        return tuple(properties)
+
+
+def _contract(
+    name: McpToolName,
+    arguments_model: type[McpArguments],
+    *,
+    access: McpAccess = McpAccess.READ,
+    quota: McpQuota = McpQuota.NONE,
+    required: tuple[str, ...] = (),
+) -> McpToolContract:
+    return McpToolContract(
+        name=name,
+        access=access,
+        quota=quota,
+        arguments_model=arguments_model,
+        required_arguments=required,
+    )
+
+
+_CONTRACTS = (
+    _contract(
+        McpToolName.DISCOVER_PAPERS,
+        DiscoverPapersArguments,
+        quota=McpQuota.ASSISTANT,
+        required=("keywords", "question", "difficulty"),
+    ),
+    _contract(
+        McpToolName.GET_PAPER_CONTENT,
+        GetPaperContentArguments,
+        quota=McpQuota.ASSISTANT,
+        required=("url",),
+    ),
+    _contract(
+        McpToolName.ANSWER_PDF_QUERIES,
+        AnswerPdfQueriesArguments,
+        quota=McpQuota.ASSISTANT,
+        required=("paper", "queries"),
+    ),
+    _contract(
+        McpToolName.READ_GITHUB_FILES,
+        GithubRepositoryArguments,
+        quota=McpQuota.ASSISTANT,
+        required=("githubUrl", "path"),
+    ),
+    _contract(McpToolName.LIST_LIBRARY, ListLibraryArguments),
+    _contract(
+        McpToolName.SAVE_PAPERS,
+        SavePapersArguments,
+        access=McpAccess.WRITE,
+        required=("paper_ids_or_urls",),
+    ),
+    _contract(
+        McpToolName.REMOVE_PAPERS,
+        RemovePapersArguments,
+        access=McpAccess.WRITE,
+        required=("paper_ids_or_urls", "folder_id"),
+    ),
+    _contract(
+        McpToolName.MOVE_PAPERS,
+        MovePapersArguments,
+        access=McpAccess.WRITE,
+        required=("paper_ids_or_urls", "from_folder_id", "to_folder_id"),
+    ),
+    _contract(
+        McpToolName.CREATE_FOLDER,
+        CreateFolderArguments,
+        access=McpAccess.WRITE,
+        required=("name",),
+    ),
+    _contract(
+        McpToolName.RENAME_FOLDER,
+        RenameFolderArguments,
+        access=McpAccess.WRITE,
+        required=("folder_id", "name"),
+    ),
+    _contract(
+        McpToolName.DELETE_FOLDER,
+        DeleteFolderArguments,
+        access=McpAccess.WRITE,
+        required=("folder_id",),
+    ),
+)
+
+MCP_TOOLS: Mapping[McpToolName, McpToolContract] = MappingProxyType(
+    {contract.name: contract for contract in _CONTRACTS}
+)
+
+
+def check_mcp_tools(candidate: McpToolList) -> McpToolDriftReport:
+    remote_by_name = {tool.name: tool for tool in candidate.tools}
+    expected_names = {name.value for name in MCP_TOOLS}
+    remote_names = set(remote_by_name)
+
+    issues = [
+        McpToolDriftIssue(kind="missing_tool", tool=name, detail="reviewed tool is missing")
+        for name in sorted(expected_names - remote_names)
+    ]
+    issues.extend(
+        McpToolDriftIssue(kind="unknown_tool", tool=name, detail="unreviewed tool was advertised")
+        for name in sorted(remote_names - expected_names)
+    )
+
+    for name, contract in MCP_TOOLS.items():
+        remote = remote_by_name.get(name.value)
+        if remote is None:
+            continue
+        if set(remote.required_arguments) != set(contract.required_arguments):
+            issues.append(
+                McpToolDriftIssue(
+                    kind="required_arguments",
+                    tool=name.value,
+                    detail="required arguments changed",
+                )
+            )
+        if set(remote.argument_names) != set(contract.argument_names):
+            issues.append(
+                McpToolDriftIssue(
+                    kind="argument_names",
+                    tool=name.value,
+                    detail="accepted argument names changed",
+                )
+            )
+
+    return McpToolDriftReport(compatible=not issues, checked_tools=len(MCP_TOOLS), issues=tuple(issues))

@@ -429,7 +429,21 @@ Issue #225 發生在目前自助 API Key 與完整 MCP 文件推出之前。
 
 `api-dev.alphaxiv.org/api.json` 只由明確執行的開發期 drift checker 下載，檢查器只報告靜態契約差異。
 
-目前 REST client 完全匿名，API Key 與 MCP 功能留待後續獨立實作。
+REST client 維持完全匿名，避免把 API Key 或 Cookie 傳給會拒絕驗證標頭的公開端點。
+
+### 已採用的靜態 MCP 白名單
+
+第二階段 CLI 透過官方 MCP Python SDK 靜態實作文件列出的 11 個 tool。
+
+MCP client 只連線固定生產 endpoint，API Key 只從 `ALPHAXIV_API_KEY` 讀取，且不跟隨 redirect。
+
+四個研究 tool 是唯讀但會消耗 Assistant 配額，七個個人書庫 tool 中只有 `list_library` 是唯讀。
+
+六個書庫寫入命令都需要 `--yes`，而 Agent Skill 另要求使用者先授權具體 tool、folder 與 papers。
+
+`tools/list` drift check 只比較名稱與 input arguments 並報告差異，不會動態註冊遠端 tool。
+
+`skills/using-alphaxiv-cli/` 只使用正式 CLI，並在缺少金鑰、403、quota、unknown tool、drift 或寫入授權不足時停止。
 
 ### 建議的第一階段功能
 
