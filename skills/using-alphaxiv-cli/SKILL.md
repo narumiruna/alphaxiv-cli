@@ -7,9 +7,15 @@ description: Use when discovering or reading alphaXiv papers, asking questions a
 
 Use only the published `alphaxiv` CLI commands in this repository.
 
+Use an installed `alphaxiv` executable when available.
+
+From this source checkout, fall back to `uv run --python 3.12 alphaxiv` as the command prefix when `alphaxiv` is not installed.
+
+Stop and report the installation error when neither command prefix can show CLI help.
+
 Do not call alphaXiv REST or MCP endpoints directly and do not import private Python client methods.
 
-Run `alphaxiv auth status --json` before any authenticated research or library workflow.
+Run the resolved command prefix with `auth status --json` before any authenticated research or library workflow.
 
 Stop and report the error when the API key is missing, authentication fails, the tool contract drifts, or alphaXiv returns `403`.
 

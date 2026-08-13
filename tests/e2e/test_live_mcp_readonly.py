@@ -19,9 +19,13 @@ def test_live_mcp_initialize_tools_and_library_are_structurally_valid() -> None:
             initialized = await client.initialize()
             tools = await client.list_tools()
             library = await client.list_library(ListLibraryArguments())
+            detailed_library = await client.list_library(ListLibraryArguments(include_papers=True))
+            membership = await client.list_library(ListLibraryArguments(paper_ids_or_urls=("1706.03762",)))
 
         assert initialized.server_name
         assert check_mcp_tools(tools).compatible is True
         assert isinstance(library.folders, tuple)
+        assert all(paper.paper_id for folder in detailed_library.folders for paper in folder.papers)
+        assert all(item.paper_id and isinstance(item.folder_ids, tuple) for item in membership.memberships)
 
     anyio.run(scenario)

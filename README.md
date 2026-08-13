@@ -8,15 +8,17 @@ It does not dynamically expose OpenAPI operations, arbitrary HTTP requests, or a
 
 ## Install
 
-Install the project and its locked dependencies with uv.
+Install the `alphaxiv` command from a source checkout with uv.
+
+```bash
+uv tool install .
+alphaxiv --help
+```
+
+For development, install the locked environment and run the CLI from the checkout.
 
 ```bash
 uv sync --python 3.12
-```
-
-Run the CLI from the checkout.
-
-```bash
 uv run --python 3.12 alphaxiv --help
 ```
 

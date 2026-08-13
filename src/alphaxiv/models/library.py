@@ -10,7 +10,17 @@ from alphaxiv.models.common import StrictModel
 
 
 class ExternalLibraryPaper(ExternalModel):
-    paper_id: str = Field(validation_alias=AliasChoices("paper_id", "paperId", "universal_id", "universalId", "id"))
+    paper_id: str = Field(
+        validation_alias=AliasChoices(
+            "paper_id",
+            "paperId",
+            "universal_paper_id",
+            "universalPaperId",
+            "universal_id",
+            "universalId",
+            "id",
+        )
+    )
     title: str | None = None
     url: str | None = None
 
@@ -29,10 +39,19 @@ class ExternalLibraryFolder(ExternalModel):
 
 
 class ExternalPaperMembership(ExternalModel):
-    paper_id: str = Field(validation_alias=AliasChoices("paper_id", "paperId", "paper", "id"))
+    paper_id: str = Field(
+        validation_alias=AliasChoices(
+            "paper_id",
+            "paperId",
+            "universal_paper_id",
+            "universalPaperId",
+            "paper",
+            "id",
+        )
+    )
     folder_ids: list[str] = Field(
         default_factory=list,
-        validation_alias=AliasChoices("folder_ids", "folderIds", "folders"),
+        validation_alias=AliasChoices("folder_ids", "folderIds", "folders", "in_folders", "inFolders"),
     )
 
 
