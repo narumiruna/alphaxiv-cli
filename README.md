@@ -8,18 +8,16 @@ It does not dynamically expose OpenAPI operations, arbitrary HTTP requests, or a
 
 ## Install
 
-Install the `axiv` command from a source checkout with uv.
+Install `axiv` with uv.
 
 ```bash
-uv tool install .
-axiv --help
+uv tool install axiv
 ```
 
-For development, install the locked environment and run the CLI from the checkout.
+Or run it without installing.
 
 ```bash
-uv sync
-uv run axiv --help
+uvx axiv --help
 ```
 
 ## Commands
