@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from typer.main import get_command
 from typer.testing import CliRunner
 
@@ -8,6 +10,14 @@ runner = CliRunner()
 
 def test_root_command_uses_axiv_name() -> None:
     assert get_command(app).name == "axiv"
+
+
+def test_version_option_prints_installed_package_version() -> None:
+    result = runner.invoke(app, ["--version"])
+
+    assert result.exit_code == 0
+    assert result.stdout == f"axiv {version('axiv')}\n"
+    assert result.stderr == ""
 
 
 def test_root_help_lists_static_rest_command_groups() -> None:

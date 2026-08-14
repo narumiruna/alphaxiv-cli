@@ -1,3 +1,4 @@
+from importlib.metadata import version
 from typing import Annotated
 
 import typer
@@ -19,11 +20,27 @@ app = typer.Typer(
 )
 
 
+def version_callback(value: bool) -> bool:
+    if value:
+        typer.echo(f"axiv {version('axiv')}")
+        raise typer.Exit
+    return value
+
+
 @app.callback()
 def main(
     debug: Annotated[
         bool,
         typer.Option("--debug", help="Show tracebacks for unexpected internal errors."),
+    ] = False,
+    version_requested: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            callback=version_callback,
+            is_eager=True,
+            help="Show the installed version and exit.",
+        ),
     ] = False,
 ) -> None:
     """Configure the axiv CLI."""
